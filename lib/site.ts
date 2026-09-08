@@ -3,7 +3,7 @@
  * Edit copy in this file. No need to touch components.
  */
 
-export const SITE_URL = "https://vectordesignatelier.com"; // TODO: confirm domain
+export const SITE_URL = "https://vectorvda.com";
 
 export const studio = {
   name: "Vector Design Atelier",
