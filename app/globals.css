@@ -1,26 +1,179 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------
+   Vector Design Atelier design tokens
+   Every colour is sampled directly from the business card and logo.
+------------------------------------------------------------------- */
+@theme {
+  --color-sage: #5f6d61;
+  --color-sage-deep: #4a564c;
+  --color-sage-soft: #8fa48f;
+  --color-bone: #f4f2ec;
+  --color-bone-2: #eae7dd;
+  --color-bone-3: #e1ddd1;
+  --color-brass: #ae9573;
+  --color-brass-soft: #c6ab88;
+  --color-ink: #141815;
+  --color-stone: #5c645b;
+  --color-stone-2: #868d84;
+  --color-rule: #d5d1c4;
+  --color-rule-soft: #e2dfd4;
+
+  --font-display: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, Menlo, monospace;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  body {
+    background-color: var(--color-bone);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    text-wrap: balance;
+    letter-spacing: -0.015em;
+  }
+  ::selection {
+    background: var(--color-sage);
+    color: var(--color-bone);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 3px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Small tracked caps: the label voice used across the site */
+  .eyebrow {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  /* Drawing-sheet annotation voice: areas, rates, plot sizes */
+  .spec {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+
+  /* Dimension line: a hairline with end ticks, as on a drawing */
+  .dimline {
+    position: relative;
+    height: 1px;
+    background: var(--color-rule);
+  }
+  .dimline::before,
+  .dimline::after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    width: 1px;
+    height: 9px;
+    background: var(--color-rule);
+  }
+  .dimline::before {
+    left: 0;
+  }
+  .dimline::after {
+    right: 0;
+  }
+
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.4s var(--ease-out-quint);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Scroll reveal, with zero JavaScript.
+   Uses scroll-driven animations where supported; everywhere else the
+   content simply renders in its final state. Nothing is ever hidden
+   behind a script that might not run.
+------------------------------------------------------------------- */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes slow-zoom {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .rise {
+      animation: rise-in linear both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 60%;
+    }
+    .draw {
+      transform-origin: left center;
+      animation: rule-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 70%;
+    }
+  }
+
+  .hero-zoom {
+    animation: slow-zoom 1.6s var(--ease-out-quint) both;
+  }
 }
