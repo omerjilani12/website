@@ -164,7 +164,7 @@ export default function Home() {
             <SectionHead
               number="03"
               title="Selected work"
-              note="Residences, commercial interiors and renovation across Islamabad and Rawalpindi."
+              note="Houses across Islamabad, Rawalpindi and Azad Kashmir, taken from first drawing through to site."
               className="flex-1 min-w-[260px]"
             />
             <Link

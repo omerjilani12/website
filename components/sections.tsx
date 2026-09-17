@@ -12,7 +12,7 @@ import {
   whatsappHref,
 } from "@/lib/site";
 import { mediaLabel, type Project } from "@/lib/projects";
-import { projectImages, galleryImages } from "@/lib/images";
+import { projectImages, siteImages, isLandscape } from "@/lib/images";
 
 /* ── Trust strip ─────────────────────────────────────────────────────── */
 
@@ -100,7 +100,7 @@ export function ProjectCard({
   priority?: boolean;
   wide?: boolean;
 }) {
-  const label = mediaLabel[project.media];
+  const label = mediaLabel[project.coverMedia];
 
   return (
     <article className="rise group">
@@ -131,13 +131,16 @@ export function ProjectCard({
           <h3 className="font-display text-[21px] leading-tight font-normal text-ink transition-colors group-hover:text-sage">
             {project.name}
           </h3>
-          <span className="spec shrink-0 text-[11px] text-stone-2">
-            {project.year}
-          </span>
+          {project.year ? (
+            <span className="spec shrink-0 text-[11px] text-stone-2">
+              {project.year}
+            </span>
+          ) : null}
         </div>
         <p className="spec mt-1.5 text-[11.5px] text-sage">
-          {project.sector} &nbsp;/&nbsp; {project.location} &nbsp;/&nbsp;{" "}
-          {project.plot}
+          {[project.sector, project.location, project.plot]
+            .filter(Boolean)
+            .join("  /  ")}
         </p>
         <p className="mt-3 max-w-[46ch] text-[16px] leading-relaxed text-stone">
           {project.summary}
@@ -297,25 +300,80 @@ export function CtaBand() {
 
 /* ── Project gallery ─────────────────────────────────────────────────── */
 
+/**
+ * Renders and site photographs arrive in different shapes: the drawings are
+ * landscape, the photographs come off a phone in portrait. Rather than crop
+ * one into the other's proportion, each frame keeps its own ratio and the
+ * landscape ones take the full row.
+ */
 export function ProjectGallery({ project }: { project: Project }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      {project.gallery.map((key, i) => (
-        <figure
-          key={key}
-          className={`rise overflow-hidden bg-bone-3 ${
-            i === 0 ? "sm:col-span-2" : ""
-          }`}
-        >
-          <Image
-            src={galleryImages[key]}
-            alt={`${project.name}, view ${i + 1}`}
-            placeholder="blur"
-            sizes="(max-width: 640px) 100vw, (max-width: 1240px) 50vw, 610px"
-            className={`w-full object-cover ${
-              i === 0 ? "aspect-[16/9]" : "aspect-[4/3]"
-            }`}
-          />
+      {project.frames.map((frame) => {
+        const image = projectImages[frame.key];
+        const wide = isLandscape(image);
+        const label = mediaLabel[frame.media];
+
+        return (
+          <figure
+            key={frame.key}
+            className={`rise ${wide ? "sm:col-span-2" : ""}`}
+          >
+            <div className="relative overflow-hidden bg-bone-3">
+              <Image
+                src={image}
+                alt={frame.alt}
+                placeholder="blur"
+                sizes={
+                  wide
+                    ? "(max-width: 640px) 100vw, (max-width: 1240px) 92vw, 1130px"
+                    : "(max-width: 640px) 100vw, (max-width: 1240px) 46vw, 555px"
+                }
+                /* Landscape frames keep their own ratio and take the row.
+                   Portrait ones share a single ratio so a row of them lines
+                   up, rather than stepping to whatever the phone recorded. */
+                className={
+                  wide ? "h-auto w-full" : "aspect-[3/4] w-full object-cover"
+                }
+              />
+              {label ? (
+                <span className="spec absolute top-4 left-4 bg-ink/75 px-2.5 py-1 text-[10.5px] tracking-[0.1em] text-bone uppercase">
+                  {label}
+                </span>
+              ) : null}
+            </div>
+            {frame.caption ? (
+              <figcaption className="mt-3 text-[15px] leading-relaxed text-stone">
+                {frame.caption}
+              </figcaption>
+            ) : null}
+          </figure>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── On site ─────────────────────────────────────────────────────────── */
+
+/** Photographs from the studio's own sites. Proof that the drawings get built. */
+export function OnSite() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      {siteImages.map((frame) => (
+        <figure key={frame.key} className="rise">
+          <div className="overflow-hidden bg-bone-3">
+            <Image
+              src={projectImages[frame.key]}
+              alt={frame.alt}
+              placeholder="blur"
+              sizes="(max-width: 640px) 100vw, (max-width: 1240px) 32vw, 385px"
+              className="aspect-[3/4] w-full object-cover"
+            />
+          </div>
+          <figcaption className="mt-3 text-[15px] leading-relaxed text-stone">
+            {frame.caption}
+          </figcaption>
         </figure>
       ))}
     </div>

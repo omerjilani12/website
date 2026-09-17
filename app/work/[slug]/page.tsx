@@ -3,7 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container, Eyebrow } from "@/components/ui";
 import { CtaBand, ProjectGallery } from "@/components/sections";
-import { getProject, mediaLabel, projects } from "@/lib/projects";
+import {
+  getProject,
+  mediaLabel,
+  projects,
+  projectSpecs,
+} from "@/lib/projects";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -37,16 +42,9 @@ export default async function ProjectPage({
 
   const index = projects.findIndex((p) => p.slug === project.slug);
   const next = projects[(index + 1) % projects.length];
-  const label = mediaLabel[project.media];
-
-  const specs = [
-    ["Sector", project.sector],
-    ["Location", project.location],
-    ["Plot", project.plot],
-    ["Covered area", project.covered],
-    ["Year", project.year],
-    ["Status", project.status],
-  ] as const;
+  const label = mediaLabel[project.coverMedia];
+  const specs = projectSpecs(project);
+  const builtOnSite = project.frames.some((f) => f.media === "photograph");
 
   return (
     <>
@@ -86,37 +84,49 @@ export default async function ProjectPage({
         <Container>
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
             <div className="lg:col-span-7">
-              {[
-                ["The brief", project.brief],
-                ["The site", project.site],
-                ["The move", project.move],
-              ].map(([heading, body], i) => (
-                <div
-                  key={heading}
-                  className={`rise ${i > 0 ? "mt-12 border-t border-rule pt-12" : ""}`}
-                >
-                  <Eyebrow>{heading}</Eyebrow>
-                  <p className="mt-5 max-w-[62ch] text-[18px] leading-relaxed text-ink/85">
-                    {body}
-                  </p>
-                </div>
-              ))}
+              {(
+                [
+                  ["The design", project.description],
+                  ["The brief", project.brief],
+                ] as [string, string | undefined][]
+              )
+                .filter((row): row is [string, string] => Boolean(row[1]))
+                .map(([heading, body], i) => (
+                  <div
+                    key={heading}
+                    className={`rise ${i > 0 ? "mt-12 border-t border-rule pt-12" : ""}`}
+                  >
+                    <Eyebrow>{heading}</Eyebrow>
+                    <p className="mt-5 max-w-[62ch] text-[18px] leading-relaxed text-ink/85">
+                      {body}
+                    </p>
+                  </div>
+                ))}
             </div>
 
             <aside className="lg:col-span-4 lg:col-start-9">
               <div className="rise border-t border-ink/25 pt-6">
-                <Eyebrow>Studio note</Eyebrow>
-                <p className="mt-4 text-[16px] leading-relaxed text-stone">
+                <Eyebrow>Materials</Eyebrow>
+                <ul className="mt-5 flex flex-wrap gap-x-2 gap-y-1.5">
+                  {project.materials.map((m) => (
+                    <li
+                      key={m}
+                      className="spec border border-rule px-2.5 py-1 text-[11px] text-stone"
+                    >
+                      {m}
+                    </li>
+                  ))}
+                </ul>
+
+                <p className="mt-7 border-t border-rule pt-6 text-[16px] leading-relaxed text-stone">
                   {label
-                    ? `The images on this page are ${label.toLowerCase()}s. The project is `
-                    : "This project was "}
-                  {project.status.toLowerCase()} in {project.year}, and was
-                  taken through design
-                  {project.sector === "Interior"
-                    ? " and fit-out"
-                    : ", approvals and construction"}{" "}
-                  by the studio.
+                    ? `The elevation shown here is a ${label.toLowerCase()}. `
+                    : ""}
+                  {builtOnSite
+                    ? "The site photographs below are of this project under construction, built by the studio to its own drawings."
+                    : "Designed by the studio and taken through approvals and construction."}
                 </p>
+
                 <Link
                   href="/services"
                   className="link-underline mt-6 inline-block font-display text-[15px] tracking-[0.04em] text-sage"

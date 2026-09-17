@@ -1,184 +1,235 @@
-import { projectImages, type GalleryKey } from "./images";
+import type { ProjectImageKey } from "./images";
 
 /* ═══════════════════════════════════════════════════════════════════════
-   ⚠  PLACEHOLDER PROJECTS. REPLACE BEFORE LAUNCH
-   ═══════════════════════════════════════════════════════════════════════
-   The six entries below are structural placeholders that demonstrate how a
-   project page reads. The photography is licensed stock and shows OTHER
-   architects' buildings.
+   The studio's own work.
 
-   Do not publish this site until each entry is replaced with a real Vector
-   project. Clients in this market do reverse-image search, and one hit ends
-   the conversation permanently.
+   WHAT IS HERE: the name, the location, and a description of what the
+   drawing actually shows. Those are all verifiable from the images.
 
-   If a project has not been photographed yet, use a render or a drawing and
-   set `media: "render"` or `media: "drawing"` and the page will caption it
-   honestly. An honest render beats a beautiful photograph of someone else's
-   building.
+   WHAT IS DELIBERATELY MISSING: plot size, covered area, year, and the
+   client's brief. Those are facts only the studio holds, so nothing has
+   been invented to fill the gap. Every one of these fields is optional
+   and the page simply leaves out whatever is absent. Fill them in and
+   they appear.
 
-   To replace: drop images into /public/img, add the import to lib/images.ts,
-   then edit the entry below. Nothing else needs to change.
+   To add a project: put the images in /public/projects, register them in
+   lib/images.ts, then add an entry below.
    ═══════════════════════════════════════════════════════════════════════ */
+
+export type Media = "render" | "photograph" | "drawing";
+
+export type Frame = {
+  key: ProjectImageKey;
+  alt: string;
+  media: Media;
+  caption?: string;
+};
 
 export type Project = {
   slug: string;
   name: string;
   sector: "Residential" | "Commercial" | "Interior" | "Renovation";
   location: string;
-  plot: string;
-  covered: string;
-  year: string;
-  status: string;
-  media: "photograph" | "render" | "drawing";
-  /** The one-line summary used on the index grid. */
+  /** Optional, and omitted from the page when absent. */
+  status?: string;
+  plot?: string;
+  covered?: string;
+  year?: string;
+  /** One line for the index grid. */
   summary: string;
-  /** What the client asked for, in their language. */
-  brief: string;
-  /** What constrained it. The most interesting part of any project. */
-  site: string;
-  /** The single design decision that defines the project. */
-  move: string;
-  cover: keyof typeof projectImages;
-  gallery: GalleryKey[];
-  placeholder: true;
+  /** What the elevation does, read off the drawing. */
+  description: string;
+  /** Visible in the drawing, so safe to publish. */
+  materials: string[];
+  /** The client's own brief. Add when the studio supplies it. */
+  brief?: string;
+  cover: ProjectImageKey;
+  coverMedia: Media;
+  frames: Frame[];
 };
 
 export const projects: Project[] = [
   {
-    slug: "margalla-view-house",
-    name: "Margalla View House",
+    slug: "jinnah-garden-house",
+    name: "Jinnah Garden House",
     sector: "Residential",
-    location: "F-7, Islamabad",
-    plot: "1 Kanal",
-    covered: "4,850 sq ft",
-    year: "2025",
-    status: "Completed",
-    media: "photograph",
-    summary:
-      "A family house turned ninety degrees off the obvious plan to put every living space on the north.",
-    brief:
-      "A family of six who had lived in a rented house where the drawing room was unusable from May to September. They asked for something they would not need to air-condition all day, with a view of the hills from wherever they actually sat.",
-    site: "A regular 1-kanal plot with the road on the south, which is where most houses in this sector put their living rooms, and why most of them cook in summer. The Margalla view is north-west. The two facts pointed the same direction.",
-    move: "The entire living floor was rotated to face north, with service and circulation banked along the southern edge as a thermal buffer. A double-height slot cut through the centre of the plan pulls hot air up and out through a clerestory, so the ground floor draws cool air across itself without a fan running. The view came free with the orientation.",
-    cover: "p-margalla",
-    gallery: ["gWindow", "daylight", "gStair", "timber"],
-    placeholder: true,
-  },
-  {
-    slug: "gulberg-greens-residence",
-    name: "Gulberg Greens Residence",
-    sector: "Residential",
-    location: "Gulberg Greens, Islamabad",
-    plot: "10 Marla",
-    covered: "3,100 sq ft",
-    year: "2025",
+    location: "Jinnah Gardens, Islamabad",
     status: "Under construction",
-    media: "render",
     summary:
-      "Ten marla planned as though it were more, by refusing to give any square foot only one job.",
-    brief:
-      "A first house for a young family, on a budget that did not stretch to the plot they wanted. The brief was simply that it should not feel small.",
-    site: "A 10-marla plot with neighbours built hard against both side boundaries, which removed cross-ventilation from the obvious axis and left only the front and rear open.",
-    move: "A narrow courtyard was carved out of the middle of the plan: costly in area, decisive in everything else. It restored cross-ventilation on the blocked axis, put daylight into rooms that would otherwise have been internal, and gave the house a view of itself. Every room now borrows light and air from a space it does not have to own.",
-    cover: "p-gulberg",
-    gallery: ["gKitchen", "gStair", "timber", "gWindow"],
-    placeholder: true,
+      "One deep stone portal holds the whole front, with the glazing, the entrance and the porch set back inside it.",
+    description:
+      "The elevation is organised as a single large frame in pale stone, and everything sits inside it. A two-storey glazed bay with a planted balcony takes one side, a full-height entrance of vertical timber slats holds the centre, and the car porch sits beneath a first-floor terrace. Setting every opening back behind one deep frame is what gives the front its shadow, and it keeps direct sun off the glass for most of the day.",
+    materials: [
+      "Pale cast stone",
+      "Split-face grey stone",
+      "Vertical timber slatting",
+      "Glass balustrade",
+      "Concealed cove lighting",
+    ],
+    cover: "jinnah-garden-render",
+    coverMedia: "render",
+    frames: [
+      {
+        key: "jinnah-garden-render",
+        alt: "Street elevation of the Jinnah Garden house at dusk, a deep stone frame around a glazed bay and timber entrance",
+        media: "render",
+      },
+      {
+        key: "jinnah-garden-site-1",
+        alt: "The grey structure on site, brick infill between a reinforced concrete frame",
+        media: "photograph",
+        caption: "Grey structure, with the entrance recess already framed",
+      },
+      {
+        key: "jinnah-garden-site-2",
+        alt: "Ground and first floor openings cast and built up in brick",
+        media: "photograph",
+        caption: "The double-height opening taking shape",
+      },
+    ],
   },
   {
-    slug: "blue-area-office-floor",
-    name: "Blue Area Office Floor",
-    sector: "Interior",
-    location: "Blue Area, Islamabad",
-    plot: "Commercial floor",
-    covered: "6,200 sq ft",
-    year: "2024",
-    status: "Completed",
-    media: "photograph",
-    summary:
-      "A full floor fit-out where the glass was moved inward so the daylight could reach further.",
-    brief:
-      "A firm of forty moving from three scattered floors into one. They wanted meeting rooms that did not feel like interrogation cells and an office that people would come into rather than avoid.",
-    site: "A deep floor plate with glazing on two elevations only, which meant the centre of the plan was more than fifteen metres from the nearest window.",
-    move: "Every enclosed room was pulled off the facade and rebuilt in glass, so the perimeter daylight passes through them rather than stopping at them. The solid walls went to the core instead, where nobody needed a view. Desks sit in the light; meeting rooms borrow it.",
-    cover: "p-bluearea",
-    gallery: ["gWindow", "daylight", "gStair", "gKitchen"],
-    placeholder: true,
-  },
-  {
-    slug: "dha-phase-2-villa",
-    name: "DHA Phase II Villa",
-    sector: "Commercial",
-    location: "DHA Phase II, Islamabad",
-    plot: "2 Kanal",
-    covered: "8,400 sq ft",
-    year: "2024",
-    status: "Completed",
-    media: "photograph",
-    summary:
-      "A deep-set facade that does its shading with geometry instead of glass coatings.",
-    brief:
-      "A client who wanted a modern elevation and had been told by two firms that it would mean a wall of glass and a permanently running chiller.",
-    site: "A west-facing frontage, the hardest orientation in this climate, taking full afternoon sun through the hottest months of the year.",
-    move: "The western elevation was set back nearly a metre behind a deep concrete frame, so the structure itself does the shading. Glass area stayed generous; solar gain did not. The elevation reads as modern because of the depth in it, which is also the thing keeping the rooms behind it cool.",
-    cover: "p-dha",
-    gallery: ["gFacade", "daylight", "gWindow", "gStair"],
-    placeholder: true,
-  },
-  {
-    slug: "f-7-apartment-interior",
-    name: "F-7 Apartment Interior",
-    sector: "Interior",
-    location: "F-7, Islamabad",
-    plot: "Apartment",
-    covered: "2,400 sq ft",
-    year: "2024",
-    status: "Completed",
-    media: "photograph",
-    summary:
-      "One removed wall, and an apartment that finally matched how the family used it.",
-    brief:
-      "A couple who had bought an apartment they liked in a building they liked, with a layout drawn for a household that was not theirs.",
-    site: "A structural frame with almost nothing movable in it: two columns and a shear wall fixed the plan, and the services were where they were.",
-    move: "A single non-structural wall between the kitchen and the dining room came out, and everything else was resolved in joinery rather than construction. Storage was built to the ceiling along the one blank wall, freeing the floor entirely. The apartment gained no area and roughly a third more usable space.",
-    cover: "p-f7",
-    gallery: ["gKitchen", "timber", "gWindow", "daylight"],
-    placeholder: true,
-  },
-  {
-    slug: "bahria-town-renovation",
-    name: "Bahria Town Renovation",
-    sector: "Renovation",
+    slug: "bahria-safari-villa",
+    name: "Safari Villa",
+    sector: "Residential",
     location: "Bahria Town, Rawalpindi",
-    plot: "1 Kanal",
-    covered: "4,200 sq ft",
-    year: "2023",
-    status: "Completed",
-    media: "photograph",
     summary:
-      "A twenty-year-old house re-planned around its own structure, with the family still living in it.",
-    brief:
-      "A house the family had outgrown and did not want to leave. They needed two more bedrooms and a kitchen that worked, and they could not move out while it happened.",
-    site: "A 2003 structure in sound condition but with a plan built around a central corridor that consumed a quarter of the floor area and lit none of it.",
-    move: "The corridor was absorbed into the rooms on either side of it and circulation moved to the perimeter, where it now runs along glazing and doubles as living space. The two bedrooms came out of the area recovered, with no addition to the footprint. Work was phased floor by floor so the family never lost a functioning kitchen or bathroom.",
-    cover: "p-bahria",
-    gallery: ["gSite", "gCrane", "timber", "gStair"],
-    placeholder: true,
+      "A pitched roof with exposed rafters set against flat-roofed stone masses, so the house reads as two buildings meeting.",
+    description:
+      "A gabled volume with exposed timber rafters and a glazed apex stands against flat-roofed masses clad in dark split-face stone and pale textured render. A circular opening punctures the upper wall, and the entrance is marked by a tall screen of vertical timber with the light concealed in its reveals. The first-floor balcony carries planting out over the porch, which softens the stone at the one point where people actually stand.",
+    materials: [
+      "Dark split-face stone",
+      "Textured render",
+      "Exposed timber rafters",
+      "Steel balustrade",
+      "Linear entrance lighting",
+    ],
+    cover: "bahria-safari-front",
+    coverMedia: "render",
+    frames: [
+      {
+        key: "bahria-safari-front",
+        alt: "Front elevation of the Safari Villa, a gabled timber-raftered volume beside flat-roofed stone masses",
+        media: "render",
+      },
+      {
+        key: "bahria-safari-corner",
+        alt: "Corner view of the Safari Villa showing how the pitched and flat-roofed volumes meet",
+        media: "render",
+        caption: "Where the two roof forms meet",
+      },
+    ],
+  },
+  {
+    slug: "dha-phase-3-house",
+    name: "DHA Phase III House",
+    sector: "Residential",
+    location: "DHA Phase III, Islamabad",
+    summary:
+      "A wide frontage broken by a double-height entrance recess, with a perforated screen holding one end.",
+    description:
+      "The elevation runs long and low across a wide plot, faced in dark stone and textured grey render. A double-height recess in pale stone marks the entrance and is lined with timber slatting. A perforated screen closes the opposite end, filtering light into the rooms behind it rather than turning a blank wall to the street. Planted balcony troughs break the upper floor, and the porch for two cars is kept separate from the entrance.",
+    materials: [
+      "Dark stone cladding",
+      "Textured render",
+      "Perforated screen",
+      "Timber slatting",
+      "Planted balcony troughs",
+    ],
+    cover: "dha-phase-3",
+    coverMedia: "render",
+    frames: [
+      {
+        key: "dha-phase-3",
+        alt: "Street elevation of the DHA Phase III house, a double-height stone entrance recess between dark stone masses",
+        media: "render",
+      },
+    ],
+  },
+  {
+    slug: "gulberg-residencia-house",
+    name: "Gulberg Residencia House",
+    sector: "Residential",
+    location: "Gulberg Residencia, Islamabad",
+    summary:
+      "A narrow frontage given its depth by vertical fins, a marble entrance panel and herringbone timber balconies.",
+    description:
+      "On a narrower plot the elevation earns its depth from layering rather than width. Vertical stone fins with concealed lighting hold one edge, a veined marble panel frames the timber entrance, and the balcony fronts are laid up in a herringbone timber pattern that catches light across the day. The porch takes two cars under the first floor, so the frontage gives nothing up to parking.",
+    materials: [
+      "Veined marble",
+      "Grey stone fins",
+      "Herringbone timber",
+      "Panelled timber door",
+      "Concealed uplighting",
+    ],
+    cover: "gulberg-residencia",
+    coverMedia: "render",
+    frames: [
+      {
+        key: "gulberg-residencia",
+        alt: "Street elevation of the Gulberg Residencia house, marble entrance panel between stone fins and a covered porch",
+        media: "render",
+      },
+    ],
+  },
+  {
+    slug: "azad-kashmir-house",
+    name: "Azad Kashmir House",
+    sector: "Residential",
+    location: "Azad Kashmir",
+    summary:
+      "Pale limestone banding run across grey stone, with a timber louvre screen shading the upper terrace.",
+    description:
+      "Horizontal bands of pale limestone run across grey stone cladding and tie the two floors into one composition. A screen of timber louvres stands beside the recessed upper terrace, shading it through the afternoon without closing it off. The porch is cut deep into the ground floor, and a continuous cove light washes the underside of every projecting slab, so the depth of the elevation still reads after dark.",
+    materials: [
+      "Grey stone cladding",
+      "Pale limestone banding",
+      "Timber louvres",
+      "Glass balustrade",
+      "Continuous cove lighting",
+    ],
+    cover: "azad-kashmir-dusk",
+    coverMedia: "render",
+    frames: [
+      {
+        key: "azad-kashmir-dusk",
+        alt: "The Azad Kashmir house at dusk, limestone banding across grey stone with the cove lighting lit",
+        media: "render",
+      },
+      {
+        key: "azad-kashmir-day",
+        alt: "The same elevation in daylight, showing the timber louvre screen and the recessed upper terrace",
+        media: "render",
+        caption: "The same elevation in daylight",
+      },
+    ],
   },
 ];
 
+/** Only the sectors actually represented, so the filter never offers a dead option. */
 export const sectors = [
   "All",
-  "Residential",
-  "Commercial",
-  "Interior",
-  "Renovation",
+  ...Array.from(new Set(projects.map((p) => p.sector))),
 ] as const;
 
 export const getProject = (slug: string) =>
   projects.find((p) => p.slug === slug);
 
-export const mediaLabel: Record<Project["media"], string | null> = {
+export const mediaLabel: Record<Media, string | null> = {
   photograph: null,
   render: "Render",
   drawing: "Drawing",
+};
+
+/** The spec pairs a project actually has, for the title block. */
+export const projectSpecs = (p: Project): [string, string][] => {
+  const rows: [string, string | undefined][] = [
+    ["Sector", p.sector],
+    ["Location", p.location],
+    ["Plot", p.plot],
+    ["Covered", p.covered],
+    ["Year", p.year],
+    ["Status", p.status],
+  ];
+  return rows.filter((row): row is [string, string] => Boolean(row[1]));
 };
