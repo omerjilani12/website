@@ -1,7 +1,7 @@
 # Vector Design Atelier
 
 Website for the architecture and construction studio of Omer Jilani, MPCATP,
-Gulberg, Islamabad
+Gulberg, Islamabad..
 
 Next.js 16 (App Router) · React 19 · Tailwind v4 · TypeScript.
 
