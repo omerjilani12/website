@@ -192,7 +192,7 @@ export type CostLine = {
 export const costs: CostLine[] = [
   {
     line: "Grey structure",
-    range: "Rs 1,800 to 2,800 / sq ft",
+    range: "Rs 3,000 to 4,500 / sq ft",
     note: "Varies with span, storeys and steel rates",
   },
   {
@@ -207,7 +207,7 @@ export const costs: CostLine[] = [
   },
   {
     line: "Design fee",
-    range: "5 to 10% of construction cost",
+    range: "10 to 15% of construction cost",
     note: "Depends on scope, and whether interiors are included",
   },
   {
@@ -224,7 +224,7 @@ export const faqs = [
   },
   {
     q: "What does the architect actually cost?",
-    a: "Design fees run 5 to 10% of construction cost, depending on scope and whether interiors are included. You get the figure in writing after the site study, not a number over the phone before anyone has seen your plot.",
+    a: "Design fees run 10 to 15% of construction cost, depending on scope and whether interiors are included. You get the figure in writing after the site study, not a number over the phone before anyone has seen your plot.",
   },
   {
     q: "Will my map get approved?",
