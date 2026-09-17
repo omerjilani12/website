@@ -5,6 +5,17 @@ import { studio } from "@/lib/site";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Where enquiries are delivered.
+ *
+ * This lives in the route handler, not in lib/site.ts, and it has to stay
+ * here. Client components import `studio` from lib/site, which serialises
+ * that whole object into the browser bundle, so an address kept there is
+ * readable by anyone who opens the JS. A route handler never reaches the
+ * client. Override per environment with CONTACT_TO.
+ */
+const ENQUIRIES_TO = "omerkhawaja12@gmail.com";
+
 const LIMIT = {
   name: 120,
   email: 200,
@@ -171,8 +182,10 @@ export async function POST(req: Request) {
 
   try {
     await transporter.sendMail({
+      // From stays the authenticated mailbox so SPF and DKIM line up. The
+      // sender's own address goes in replyTo, so hitting reply answers them.
       from: `"${studio.name} website" <${user}>`,
-      to: process.env.CONTACT_TO || user,
+      to: process.env.CONTACT_TO || ENQUIRIES_TO || user,
       replyTo: `"${name.replace(/"/g, "")}" <${email}>`,
       subject: `New enquiry: ${type}${location ? ` in ${location}` : ""}`,
       text,

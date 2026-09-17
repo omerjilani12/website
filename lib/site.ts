@@ -21,6 +21,7 @@ export const studio = {
   },
   phone: "+92 313 888 22 07",
   phoneRaw: "923138882207",
+  /** Shown on the site, so this is the address clients write to directly. */
   email: "omerjilani@yahoo.com",
   social: {
     // TODO: confirm full URLs. The business card lists handles only
